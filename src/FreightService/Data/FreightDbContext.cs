@@ -5,9 +5,8 @@ namespace FreightService.Data
 {
     public class FreightDbContext : DbContext
     {
-        public FreightDbContext(DbContextOptions<FreightDbContext> options) : base(options)
-        {
-        }
+        public FreightDbContext(DbContextOptions<FreightDbContext> options)
+            : base(options) { }
 
         public DbSet<Freight> Freights { get; set; }
         public DbSet<Cargo> Cargos { get; set; }
@@ -21,7 +20,8 @@ namespace FreightService.Data
             modelBuilder.Entity<Cargo>().ToTable("cargos");
 
             // Define the one-to-one relationship explicitly
-            modelBuilder.Entity<Freight>()
+            modelBuilder
+                .Entity<Freight>()
                 .HasOne(f => f.Cargo)
                 .WithOne(c => c.Freight)
                 .HasForeignKey<Cargo>(c => c.FreightId);

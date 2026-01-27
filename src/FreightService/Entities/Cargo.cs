@@ -1,13 +1,12 @@
-
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreightService.Entities
 {
-   
-   [Table("Cargos")]
+    [Table("Cargos")]
     public class Cargo
     {
         public Guid Id { get; set; }
+
         // Cargo details
         public string Description { get; set; } = null!; // Description of the cargo
         public int WeightKg { get; set; } // Weight in kilograms

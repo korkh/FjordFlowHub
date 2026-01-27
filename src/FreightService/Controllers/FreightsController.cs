@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FreightService.Data;
 using FreightService.DTOs;
 using FreightService.Entities;
@@ -21,14 +22,17 @@ namespace FreightService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<FreightDto>>> GetAllFreights()
+        public async Task<ActionResult<List<FreightDto>>> GetAllFreights(string date)
         {
-            var freights = await _context
-                .Freights.Include(x => x.Cargo)
-                .OrderBy(x => x.Cargo.Description)
-                .ToListAsync();
-
-            return _mapper.Map<List<FreightDto>>(freights);
+            var query = _context.Freights.OrderBy(x => x.Cargo.Description).AsQueryable();
+            if (!string.IsNullOrEmpty(date))
+            {
+                //returning option where is greater than particular date
+                query = query.Where(x =>
+                    x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0
+                );
+            }
+            return await query.ProjectTo<FreightDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         [HttpGet("{id}")]
@@ -50,12 +54,15 @@ namespace FreightService.Controllers
         public async Task<ActionResult<FreightDto>> CreateFreight(CreateFreightDto freightDto)
         {
             var freight = _mapper.Map<Freight>(freightDto);
-            // Temporary hardcoded seller
             freight.Seller = "Test Seller";
 
-            _context.Freights.Add(freight);
+            // TODO: get from User.Identity.Name
 
-            var result = await _context.SaveChangesAsync() > 0; // Returns true if at least one row was affected
+            // IMPORTANT FOR TENDER: Start the "bid" at the maximum price
+            freight.CurrentHighBid = freightDto.ReservePrice;
+
+            _context.Freights.Add(freight);
+            var result = await _context.SaveChangesAsync() > 0;
 
             if (!result)
                 return BadRequest("Could not save changes to the DB");
@@ -82,6 +89,8 @@ namespace FreightService.Controllers
 
             // Manually update cargo properties
             // Using null-coalescing operator ?? to keep old values if DTO fields are null
+            freight.ReservePrice =
+                updateDto.ReservePrice != 0 ? updateDto.ReservePrice : freight.ReservePrice;
             freight.Cargo.Description = updateDto.Description ?? freight.Cargo.Description;
             freight.Cargo.WeightKg =
                 updateDto.WeightKg != 0 ? updateDto.WeightKg : freight.Cargo.WeightKg;

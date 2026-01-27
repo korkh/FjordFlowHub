@@ -1,19 +1,26 @@
-namespace FreightService.Entities
-{
-    public class Freight
-    {
-        public Guid Id { get; set; }
-        public int ReservePrice { get; set; } = 0; // Minimum acceptable price
-        public string Seller { get; set; } // Shipper
-        public string Winner { get; set; } // Carrier who won the auction
-        public int SoldAmount { get; set; }
-        public int CurrentHighBid { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime AuctionEnd { get; set; } // Time when the auction ends
-        public Status Status { get; set; }
+namespace FreightService.Entities;
 
-        // Navigation property for related Cargo
-        public Cargo Cargo { get; set; } = null!;
-    }
+public class Freight
+{
+    public Guid Id { get; set; }
+
+    // In a tender, this is the MAXIMUM price the Shipper is willing to pay
+    public int ReservePrice { get; set; } = 0;
+
+    public string Seller { get; set; } // Shipper (who needs delivery)
+
+    // Carrier who offered the lowest price
+    public string Winner { get; set; }
+
+    public int SoldAmount { get; set; }
+
+    // Current highest bid from a Carrier
+    public int CurrentHighBid { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime AuctionEnd { get; set; }
+    public Status Status { get; set; }
+
+    public Cargo Cargo { get; set; } = null!;
 }

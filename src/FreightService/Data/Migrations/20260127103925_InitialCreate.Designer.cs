@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FreightService.Data.Migrations
 {
     [DbContext(typeof(FreightDbContext))]
-    [Migration("20260126103106_InitialCreate")]
+    [Migration("20260127103925_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

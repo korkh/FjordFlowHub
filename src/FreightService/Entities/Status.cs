@@ -9,7 +9,7 @@ namespace FreightService.Entities
     {
         Live,
         Reserved,
-        Delivered,      
-        Cancelled
+        Delivered,
+        Cancelled,
     }
 }
