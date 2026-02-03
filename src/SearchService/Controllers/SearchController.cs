@@ -12,57 +12,53 @@ public class SearchController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Item>>> SearchItems([FromQuery] SearchParams searchParams)
     {
-        // 1. Start building the query
+        // 1. Initialize paged search
         var query = DB.PagedSearch<Item, Item>();
 
-        // 2. Full-text search logic
+        // 2. Full-text search (requires text index in MongoDB)
         if (!string.IsNullOrEmpty(searchParams.SearchTerm))
         {
             query.Match(Search.Full, searchParams.SearchTerm).SortByTextScore();
         }
-        else
-        {
-            // Default sorting if no search term is provided
-            query.Sort(x => x.Ascending(a => a.AuctionEnd));
-        }
 
-        // 3. Sorting logic based on params
+        // 3. Sorting logic
         query = searchParams.OrderBy switch
         {
             "new" => query.Sort(x => x.Descending(a => a.CreatedAt)),
-            // For a tender, the lowest price is the most attractive
+            // Lowest bid is top priority for tender logic
             "price" => query.Sort(x => x.Ascending(a => a.CurrentHighBid)),
             _ => query.Sort(x => x.Ascending(a => a.AuctionEnd)),
         };
 
-        // 4. Filtering logic (Live, Finished, etc.)
+        // 4. Filtering logic
         query = searchParams.FilterBy switch
         {
             "finished" => query.Match(x => x.AuctionEnd < DateTime.UtcNow),
             "endingSoon" => query.Match(x =>
                 x.AuctionEnd < DateTime.UtcNow.AddHours(6) && x.AuctionEnd > DateTime.UtcNow
             ),
-            _ => query.Match(x => x.AuctionEnd > DateTime.UtcNow), // Live by default
+            // Default: Show only active tenders
+            _ => query.Match(x => x.AuctionEnd > DateTime.UtcNow),
         };
 
-        // 5. Seller/Winner filtering
+        // 5. Seller/Winner filtering (Fix: added assignments to query variable)
         if (!string.IsNullOrEmpty(searchParams.Seller))
         {
-            query.Match(x => x.Seller == searchParams.Seller);
+            query = query.Match(x => x.Seller == searchParams.Seller);
         }
 
         if (!string.IsNullOrEmpty(searchParams.Winner))
         {
-            query.Match(x => x.Winner == searchParams.Winner);
+            query = query.Match(x => x.Winner == searchParams.Winner);
         }
 
-        // 6. Pagination
+        // 6. Pagination settings
         query.PageNumber(searchParams.PageNumber);
         query.PageSize(searchParams.PageSize);
 
+        // 7. Execute query
         var result = await query.ExecuteAsync();
 
-        // Wrap result into a standard response with total count
         return Ok(
             new
             {

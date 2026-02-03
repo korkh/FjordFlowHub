@@ -10,8 +10,9 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
   mongodb:
-    image: mongo
+    image: mongo:latest
     container_name: fjordflowhub-mongodb
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
@@ -20,6 +21,19 @@ services:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: fjordflowhub-rabbitmq
+    ports:
+      - "5672:5672"   # Sending msg port (MassTransit)
+      - "15672:15672" # Web control panel port
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata:
   mongodata:

@@ -1,6 +1,17 @@
 @SearchService_HostAddress = http://localhost:5280
 
-GET {{SearchService_HostAddress}}/weatherforecast/
+### Search for freights (example: searching for 'Oslo')
+GET {{SearchService_HostAddress}}/api/search?searchTerm=Oslo
 Accept: application/json
 
-###
+### Filter by status (example: only Live auctions)
+GET {{SearchService_HostAddress}}/api/search?filterBy=live
+Accept: application/json
+
+### Sort by newness
+GET {{SearchService_HostAddress}}/api/search?orderBy=new
+Accept: application/json
+
+### Paging example
+GET {{SearchService_HostAddress}}/api/search?pageNumber=1&pageSize=4
+Accept: application/json

@@ -1,6 +1,23 @@
 @FreightService_HostAddress = http://localhost:5029
 
-GET {{FreightService_HostAddress}}/weatherforecast/
+### Get all freights (with optional date filter for sync)
+GET {{FreightService_HostAddress}}/api/freights?date=2025-01-01
 Accept: application/json
 
-###
+### Get a specific freight by ID (example ID from your seed)
+GET {{FreightService_HostAddress}}/api/freights/afbee524-5972-4075-8af4-519f95859505
+Accept: application/json
+
+### Create a new freight (example for testing)
+POST {{FreightService_HostAddress}}/api/freights
+Content-Type: application/json
+
+{
+  "reservePrice": 1000,
+  "seller": "Test Seller",
+  "auctionEnd": "2026-12-01T10:00:00Z",
+  "description": "New test cargo",
+  "weightKg": 500,
+  "pickupCity": "Oslo",
+  "deliveryCity": "Drammen"
+}

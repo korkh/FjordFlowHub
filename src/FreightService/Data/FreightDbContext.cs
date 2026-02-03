@@ -1,4 +1,5 @@
 using FreightService.Entities;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreightService.Data
@@ -14,6 +15,10 @@ namespace FreightService.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.AddInboxStateEntity();
+            modelBuilder.AddOutboxMessageEntity();
+            modelBuilder.AddOutboxStateEntity();
 
             // Explicitly set table names to lowercase for PostgreSQL compatibility
             modelBuilder.Entity<Freight>().ToTable("freights");

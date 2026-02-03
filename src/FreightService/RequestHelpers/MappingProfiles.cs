@@ -1,4 +1,5 @@
 using AutoMapper;
+using Contracts;
 using FreightService.DTOs;
 using FreightService.Entities;
 
@@ -15,6 +16,9 @@ namespace FreightService.RequestHelpers
             CreateMap<CreateFreightDto, Freight>()
                 .ForMember(dest => dest.Cargo, opt => opt.MapFrom(src => src));
             CreateMap<CreateFreightDto, Cargo>();
+            CreateMap<FreightDto, FreightCreated>();
+            CreateMap<Freight, FreightUpdated>().IncludeMembers(a => a.Cargo);
+            CreateMap<Cargo, FreightUpdated>();
         }
     }
 }
