@@ -5,6 +5,7 @@ using FreightService.Data;
 using FreightService.DTOs;
 using FreightService.Entities;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,13 +52,14 @@ namespace FreightService.Controllers
             return _mapper.Map<FreightDto>(freight);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<FreightDto>> CreateFreight(CreateFreightDto freightDto)
         {
             var freight = _mapper.Map<Freight>(freightDto);
-            freight.Seller = "Test Seller";
 
-            // TODO: get from User.Identity.Name
+            // Set the current user as the seller
+            freight.Seller = User.Identity.Name;
 
             // IMPORTANT FOR TENDER: Start the "bid" at the maximum price
             freight.CurrentHighBid = freightDto.ReservePrice;
@@ -82,6 +84,7 @@ namespace FreightService.Controllers
             );
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateFreight(Guid id, UpdateFreightDto updateDto)
         {
@@ -93,7 +96,8 @@ namespace FreightService.Controllers
             if (freight == null)
                 return NotFound("Cannot find your freight");
 
-            // TODO: check seller == username
+            if (freight.Seller != User.Identity.Name)
+                return Forbid();
 
             // Manually update cargo properties
             // Using null-coalescing operator ?? to keep old values if DTO fields are null
@@ -116,6 +120,7 @@ namespace FreightService.Controllers
             return BadRequest("Problem saving changes");
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteFreight(Guid id)
         {
@@ -125,7 +130,8 @@ namespace FreightService.Controllers
             if (freight == null)
                 return NotFound();
 
-            // TODO: check seller == username (when auth is ready)
+            if (freight.Seller != User.Identity.Name)
+                return Forbid();
 
             _context.Freights.Remove(freight);
 
