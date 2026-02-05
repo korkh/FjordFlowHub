@@ -12,10 +12,10 @@ public class Freight
     // Carrier who offered the lowest price
     public string Winner { get; set; }
 
-    public int SoldAmount { get; set; }
+    public int? SoldAmount { get; set; }
 
     // Current highest bid from a Carrier
-    public int CurrentHighBid { get; set; }
+    public int? CurrentLowBid { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -30,5 +30,18 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 ClientSecrets = [new Secret("NotASecretAtAll".Sha256())],
             },
+            new Client
+            {
+                ClientId = "nextApp",
+                ClientName = "NextApp",
+                ClientSecrets = [new Secret("secret".Sha256())],
+                AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                //RequirePkce = false - we are mot using mobile app
+                RequirePkce = false,
+                RedirectUris = { "http://localhost:3000/api/callback/id-server" },
+                AllowOfflineAccess = true,
+                AllowedScopes = { "openid", "profile", "freightApp" },
+                AccessTokenLifetime = 3600 * 24 * 30,
+            },
         ];
 }
