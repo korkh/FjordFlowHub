@@ -14,7 +14,9 @@ public class Index : PageModel
     public async Task<IActionResult> OnGet()
     {
         //Replace with an authorization policy check
-        if (HttpContext.Connection.IsRemote())
+        var isDev = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+
+        if (!isDev && HttpContext.Connection.IsRemote())
         {
             return NotFound();
         }

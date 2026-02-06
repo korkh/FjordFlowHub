@@ -62,7 +62,7 @@ namespace FreightService.Controllers
             freight.Seller = User.Identity.Name;
 
             // IMPORTANT FOR TENDER: Start the "bid" at the maximum price
-            freight.CurrentHighBid = freightDto.ReservePrice;
+            freight.CurrentLowBid = freightDto.ReservePrice;
 
             _context.Freights.Add(freight);
 

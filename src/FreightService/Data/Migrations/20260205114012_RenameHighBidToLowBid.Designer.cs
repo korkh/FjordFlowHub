@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FreightService.Data.Migrations
 {
     [DbContext(typeof(FreightDbContext))]
-    [Migration("20260202103138_Outbox")]
-    partial class Outbox
+    [Migration("20260205114012_RenameHighBidToLowBid")]
+    partial class RenameHighBidToLowBid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,7 +75,7 @@ namespace FreightService.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("CurrentLowBid")
+                    b.Property<int?>("CurrentLowBid")
                         .HasColumnType("integer");
 
                     b.Property<int>("ReservePrice")
@@ -84,7 +84,7 @@ namespace FreightService.Data.Migrations
                     b.Property<string>("Seller")
                         .HasColumnType("text");
 
-                    b.Property<int>("SoldAmount")
+                    b.Property<int?>("SoldAmount")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
@@ -115,7 +115,7 @@ namespace FreightService.Data.Migrations
                     b.Property<Guid>("ConsumerId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("ReserveNotMet")
+                    b.Property<DateTime?>("Delivered")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ExpirationTime")
@@ -143,7 +143,7 @@ namespace FreightService.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReserveNotMet");
+                    b.HasIndex("Delivered");
 
                     b.ToTable("InboxState");
                 });
@@ -248,7 +248,7 @@ namespace FreightService.Data.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("ReserveNotMet")
+                    b.Property<DateTime?>("Delivered")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long?>("LastSequenceNumber")

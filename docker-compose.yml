@@ -10,7 +10,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   mongodb:
     image: mongo:latest
     container_name: fjordflowhub-mongodb
@@ -21,19 +25,104 @@ services:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
-
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh", # must be mongosh not a just mongo
+          "--quiet",
+          "127.0.0.1/test",
+          "--eval",
+          "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:4-management-alpine
     container_name: fjordflowhub-rabbitmq
     ports:
       - "5672:5672"   # Sending msg port (MassTransit)
       - "15672:15672" # Web control panel port
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
       interval: 10s
       timeout: 5s
       retries: 5
-
+      start_period: 15s # wait until 15 seconds after container startup
+  freight-svc:
+    image: fjordflowhub/freight-svc:latest
+    container_name: fjordflowhub-freight-svc
+    build:
+      context: .
+      dockerfile: src/FreightService/Dockerfile    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq # must be the same as rabbitmq service
+      - ConnectionStrings__DefaultConnection=Server=postgres;User Id=devuser;Password=devpassword;Database=freights # must be the same as postgres service
+      - IdentityServiceUrl=http://identity-svc
+    ports:
+      - "7001:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  search-svc:
+    image: fjordflowhub/search-svc:latest
+    container_name: fjordflowhub-search-svc
+    build:
+      context: .
+      dockerfile: src/SearchService/Dockerfile    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq # must be the same as rabbitmq service
+      - ConnectionStrings__MongoDbConnection=mongodb://root:password@mongodb:27017
+      - FreightServiceUrl=http://freight-svc
+    ports:
+      - "7002:80"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  identity-svc:
+    image: fjordflowhub/identity-svc:latest
+    container_name: fjordflowhub-identity-svc
+    build:
+      context: .
+      dockerfile: src/IdentityService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+      # Connect to the same postgres container but use 'identity' database
+      - ConnectionStrings__DefaultConnection=Server=postgres;User Id=devuser;Password=devpassword;Database=identity
+    ports:
+      - "5001:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+  gateway-svc:
+    image: fjordflowhub/gateway-svc:latest
+    container_name: fjordflowhub-gateway-svc
+    build:
+      context: .
+      dockerfile: src/GatewayService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "6001:80" 
+    depends_on:
+      identity-svc:
+        condition: service_started
+      freight-svc:
+        condition: service_started
+      search-svc:
+        condition: service_started   
 volumes:
   pgdata:
   mongodata:

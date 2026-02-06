@@ -20,16 +20,26 @@ namespace FreightService.Data.Migrations
                     Seller = table.Column<string>(type: "text", nullable: true),
                     Winner = table.Column<string>(type: "text", nullable: true),
                     SoldAmount = table.Column<int>(type: "integer", nullable: false),
-                    CurrentHighBid = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AuctionEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false)
+                    CurrentLowBid = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
+                    UpdatedAt = table.Column<DateTime>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
+                    AuctionEnd = table.Column<DateTime>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_freights", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "cargos",
@@ -43,7 +53,7 @@ namespace FreightService.Data.Migrations
                     PickupCity = table.Column<string>(type: "text", nullable: true),
                     DeliveryCity = table.Column<string>(type: "text", nullable: true),
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
-                    FreightId = table.Column<Guid>(type: "uuid", nullable: false)
+                    FreightId = table.Column<Guid>(type: "uuid", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -53,24 +63,25 @@ namespace FreightService.Data.Migrations
                         column: x => x.FreightId,
                         principalTable: "freights",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_cargos_FreightId",
                 table: "cargos",
                 column: "FreightId",
-                unique: true);
+                unique: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "cargos");
+            migrationBuilder.DropTable(name: "cargos");
 
-            migrationBuilder.DropTable(
-                name: "freights");
+            migrationBuilder.DropTable(name: "freights");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace FreightService.Data
                 {
                     Id = Guid.Parse("afbee524-5972-4075-8af4-519f95859505"),
                     ReservePrice = 2500,
-                    CurrentHighBid = 2500, // Starting point for tender
+                    CurrentLowBid = 2500, // Starting point for tender
                     Seller = "Oslo Construction AS",
                     AuctionEnd = DateTime.UtcNow.AddDays(10),
                     Status = Status.Live,
@@ -44,15 +44,15 @@ namespace FreightService.Data
                             "https://media.sciencephoto.com/image/c0264488/800wm/C0264488-Thermal_insulation_boards.jpg",
                     },
                 },
-                // 2. RESERVED - Some carrier offered 750
+                // 2. Finished - Some carrier offered 750
                 new Freight
                 {
                     Id = Guid.Parse("c8c3ec17-01bf-49db-82aa-1d9cc2235a0c"),
                     ReservePrice = 800,
-                    CurrentHighBid = 750,
+                    CurrentLowBid = 750,
                     Seller = "Nordic Tech Electronics",
                     AuctionEnd = DateTime.UtcNow.AddDays(4),
-                    Status = Status.Reserved,
+                    Status = Status.Finished,
                     Cargo = new Cargo
                     {
                         Description = "Server rack equipment",
@@ -65,17 +65,17 @@ namespace FreightService.Data
                             "https://robots.net/wp-content/uploads/2023/11/how-to-cool-a-server-rack-1701058282.jpg",
                     },
                 },
-                // 3. DELIVERED - Winner offered 1400 (below budget of 1500)
+                // 3. ReserveNotMet - Winner offered 1400 (below budget of 1500)
                 new Freight
                 {
                     Id = Guid.Parse("bbd57683-939e-4360-a15d-99f722055660"),
                     ReservePrice = 1500,
                     Winner = "ExpressLogistics",
                     SoldAmount = 1400,
-                    CurrentHighBid = 1400,
+                    CurrentLowBid = 1400,
                     Seller = "Fjord Furniture",
                     AuctionEnd = DateTime.UtcNow.AddDays(-1),
-                    Status = Status.Delivered,
+                    Status = Status.ReserveNotMet,
                     Cargo = new Cargo
                     {
                         Description = "Handmade oak tables",
@@ -93,7 +93,7 @@ namespace FreightService.Data
                 {
                     Id = Guid.Parse("dc1e4071-d19d-459b-b840-385a30351234"),
                     ReservePrice = 5000,
-                    CurrentHighBid = 5000,
+                    CurrentLowBid = 5000,
                     Seller = "Tromsø Seafood Export",
                     AuctionEnd = DateTime.UtcNow.AddDays(-2),
                     Status = Status.Cancelled,
@@ -114,7 +114,7 @@ namespace FreightService.Data
                 {
                     Id = Guid.Parse("6a5011a1-910a-4bab-9817-3f7fa41c6014"),
                     ReservePrice = 12000,
-                    CurrentHighBid = 11500,
+                    CurrentLowBid = 11500,
                     Seller = "Norway Energy Solutions equipment",
                     AuctionEnd = DateTime.UtcNow.AddDays(15),
                     Status = Status.Live,
@@ -130,17 +130,17 @@ namespace FreightService.Data
                             "https://scu-bucket-3.oss-eu-central-1.aliyuncs.com/uploads/2023/11/Ireland-energy-storage-container.jpg",
                     },
                 },
-                // 6. DELIVERED
+                // 6. ReserveNotMet
                 new Freight
                 {
                     Id = Guid.Parse("40490d57-5d76-4835-bc46-7011a3060f94"),
                     ReservePrice = 500,
                     Winner = "FastDelivery",
                     SoldAmount = 450,
-                    CurrentHighBid = 450,
+                    CurrentLowBid = 450,
                     Seller = "Oslo Auto Parts",
                     AuctionEnd = DateTime.UtcNow.AddDays(-5),
-                    Status = Status.Delivered,
+                    Status = Status.ReserveNotMet,
                     Cargo = new Cargo
                     {
                         Description = "Winter tires set (Peugeot 3008 compatible)",
@@ -158,7 +158,7 @@ namespace FreightService.Data
                 {
                     Id = Guid.Parse("3659da20-94f4-4a7b-a487-3d961e682e70"),
                     ReservePrice = 200,
-                    CurrentHighBid = 200,
+                    CurrentLowBid = 200,
                     Seller = "National Library",
                     AuctionEnd = DateTime.UtcNow.AddHours(4),
                     Status = Status.Live,
@@ -174,15 +174,15 @@ namespace FreightService.Data
                             "https://tse4.mm.bing.net/th/id/OIP.Ha3gZPJzVUlm1haTuP4a9QHaFk?cb=defcachec2&w=2000&h=1506&rs=1&pid=ImgDetMain&o=7&rm=3",
                     },
                 },
-                // 8. RESERVED
+                // 8. Finished
                 new Freight
                 {
                     Id = Guid.Parse("6a5011a1-910a-4bab-9817-3f7fa41c6015"),
                     ReservePrice = 3000,
-                    CurrentHighBid = 2800,
+                    CurrentLowBid = 2800,
                     Seller = "SolarNordic AS",
                     AuctionEnd = DateTime.UtcNow.AddDays(7),
-                    Status = Status.Reserved,
+                    Status = Status.Finished,
                     Cargo = new Cargo
                     {
                         Description = "Photovoltaic solar panels",
@@ -200,7 +200,7 @@ namespace FreightService.Data
                 {
                     Id = Guid.Parse("afbee524-5972-4075-8af4-519f95859510"),
                     ReservePrice = 500,
-                    CurrentHighBid = 500,
+                    CurrentLowBid = 500,
                     Seller = "Oslo Coffee Roasters",
                     AuctionEnd = DateTime.UtcNow.AddDays(3),
                     Status = Status.Live,
@@ -221,7 +221,7 @@ namespace FreightService.Data
                 {
                     Id = Guid.Parse("c8c3ec17-01bf-49db-82aa-1d9cc2235a11"),
                     ReservePrice = 15000,
-                    CurrentHighBid = 15000,
+                    CurrentLowBid = 15000,
                     Seller = "Fjord Industrial",
                     Status = Status.Cancelled,
                     AuctionEnd = DateTime.UtcNow.AddDays(-10),

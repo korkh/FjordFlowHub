@@ -75,7 +75,7 @@ namespace FreightService.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("CurrentHighBid")
+                    b.Property<int>("CurrentLowBid")
                         .HasColumnType("integer");
 
                     b.Property<int>("ReservePrice")

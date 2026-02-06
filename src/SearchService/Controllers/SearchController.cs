@@ -26,7 +26,7 @@ public class SearchController : ControllerBase
         {
             "new" => query.Sort(x => x.Descending(a => a.CreatedAt)),
             // Lowest bid is top priority for tender logic
-            "price" => query.Sort(x => x.Ascending(a => a.CurrentHighBid)),
+            "price" => query.Sort(x => x.Ascending(a => a.CurrentLowBid)),
             _ => query.Sort(x => x.Ascending(a => a.AuctionEnd)),
         };
 

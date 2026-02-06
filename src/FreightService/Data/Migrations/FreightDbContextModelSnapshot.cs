@@ -72,7 +72,7 @@ namespace FreightService.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("CurrentHighBid")
+                    b.Property<int?>("CurrentLowBid")
                         .HasColumnType("integer");
 
                     b.Property<int>("ReservePrice")
@@ -81,7 +81,7 @@ namespace FreightService.Data.Migrations
                     b.Property<string>("Seller")
                         .HasColumnType("text");
 
-                    b.Property<int>("SoldAmount")
+                    b.Property<int?>("SoldAmount")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")

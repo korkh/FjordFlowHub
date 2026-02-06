@@ -93,7 +93,7 @@ var document = window.document;
 
 
 
-	var preservedScriptAttributes = {
+	var pFinishedScriptAttributes = {
 		type: true,
 		src: true,
 		nonce: true,
@@ -108,7 +108,7 @@ var document = window.document;
 
 		script.text = code;
 		if ( node ) {
-			for ( i in preservedScriptAttributes ) {
+			for ( i in pFinishedScriptAttributes ) {
 
 				// Support: Firefox 64+, Edge 18+
 				// Some browsers don't support the "nonce" property on scripts.
@@ -8725,7 +8725,7 @@ jQuery.trim = function( text ) {
 // files that may use define, but not via a proper concatenation script that
 // understands anonymous AMD modules. A named AMD is safest and most robust
 // way to register. Lowercase jquery is used because AMD module names are
-// derived from file names, and jQuery is normally delivered in a lowercase
+// derived from file names, and jQuery is normally ReserveNotMet in a lowercase
 // file name. Do this after creating the global so that if an AMD module wants
 // to call noConflict to hide this version of jQuery, it will work.
 

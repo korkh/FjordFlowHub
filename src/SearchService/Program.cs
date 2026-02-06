@@ -14,7 +14,13 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfiles).Assembly);
 
 // Register the HTTP client with a resilience policy (Polly)
 // This will retry connecting to the FreightService if it's temporarily unavailable
-builder.Services.AddHttpClient<FreightServiceHttpClient>().AddPolicyHandler(GetPolicy());
+builder
+    .Services.AddHttpClient<FreightServiceHttpClient>(client =>
+    {
+        // Getting URL from environment variable (Docker) or appsettings.json
+        client.BaseAddress = new Uri(builder.Configuration["FreightServiceUrl"]);
+    })
+    .AddPolicyHandler(GetPolicy());
 builder.Services.AddMassTransit(x =>
 {
     // Automatically discover all consumers in the current assembly
@@ -26,6 +32,15 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq(
         (context, cnf) =>
         {
+            cnf.Host(
+                builder.Configuration["RabbitMq:Host"],
+                "/",
+                h =>
+                {
+                    h.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+                    h.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+                }
+            );
             //Adding Message retries for consumer
             //with intervals of 5 sec and 5 numbers of retries
             cnf.ReceiveEndpoint(
