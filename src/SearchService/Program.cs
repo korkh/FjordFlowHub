@@ -86,4 +86,7 @@ static IAsyncPolicy<HttpResponseMessage> GetPolicy() =>
     HttpPolicyExtensions
         .HandleTransientHttpError()
         .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
-        .WaitAndRetryForeverAsync(_ => TimeSpan.FromSeconds(3));
+        .WaitAndRetryAsync(
+            5,
+            retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)) // Exponential backoff: 2, 4, 8, 16, 32 сек.
+        );

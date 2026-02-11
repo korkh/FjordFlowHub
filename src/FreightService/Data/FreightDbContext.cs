@@ -30,6 +30,7 @@ namespace FreightService.Data
                 .HasOne(f => f.Cargo)
                 .WithOne(c => c.Freight)
                 .HasForeignKey<Cargo>(c => c.FreightId);
+            ;
         }
     }
 }

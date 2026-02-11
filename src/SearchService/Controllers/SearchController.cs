@@ -37,7 +37,7 @@ public class SearchController : ControllerBase
             "endingSoon" => query.Match(x =>
                 x.AuctionEnd < DateTime.UtcNow.AddHours(6) && x.AuctionEnd > DateTime.UtcNow
             ),
-            // Default: Show only active tenders
+            "all" => query,
             _ => query.Match(x => x.AuctionEnd > DateTime.UtcNow),
         };
 
