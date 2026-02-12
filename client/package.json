@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.21",
+    "@tanstack/react-query-devtools": "^5.91.3",
     "flowbite": "^4.0.1",
     "flowbite-react": "^0.12.17",
     "next": "16.1.6",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import NavBar from "./nav/NavBar";
+import QueryProvider from "./providers/QueryProvider";
 
 export const metadata: Metadata = {
   title: "Fjord-Flow-Hub",
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NavBar />
-        <main className="container mx-auto px-5 pt-10">{children}</main>
+        <QueryProvider>
+          <NavBar />
+          <main className="container mx-auto px-5 pt-10">{children}</main>
+        </QueryProvider>
       </body>
     </html>
   );

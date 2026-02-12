@@ -9,7 +9,7 @@ type Props = {
 export default function CargoImage({ imageUrl, isFinished }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   return (
-    <div>
+    <>
       <Image
         alt="image of a freight"
         src={imageUrl}
@@ -23,6 +23,6 @@ export default function CargoImage({ imageUrl, isFinished }: Props) {
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         onLoad={() => setIsLoading(false)}
       />
-    </div>
+    </>
   );
 }

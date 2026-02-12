@@ -9,13 +9,8 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      { hostname: "robots.net" },
-      { hostname: "tse1.mm.bing.net" },
       { hostname: "tse2.mm.bing.net" },
-      { hostname: "tse3.mm.bing.net" },
       { hostname: "tse4.mm.bing.net" },
-      { hostname: "img.freepik.com" },
-      { hostname: "cdn.shopify.com" },
       { hostname: "cdn.pixabay.com" },
       { hostname: "media.sciencephoto.com" },
       { hostname: "scu-bucket-3.oss-eu-central-1.aliyuncs.com" },
