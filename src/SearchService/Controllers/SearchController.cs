@@ -25,8 +25,12 @@ public class SearchController : ControllerBase
         query = searchParams.OrderBy switch
         {
             "new" => query.Sort(x => x.Descending(a => a.CreatedAt)),
-            // Lowest bid is top priority for tender logic
-            "price" => query.Sort(x => x.Ascending(a => a.CurrentLowBid)),
+            "price" => query
+                .Sort(x => x.Ascending(a => a.CurrentLowBid))
+                .Sort(x => x.Ascending(a => a.AuctionEnd)),
+            "description" => query.Sort(x => x.Ascending(a => a.Description)),
+            "weight" => query.Sort(x => x.Descending(a => a.WeightKg)),
+            // By default, sort by auction end time (soonest first)
             _ => query.Sort(x => x.Ascending(a => a.AuctionEnd)),
         };
 
@@ -34,10 +38,12 @@ public class SearchController : ControllerBase
         query = searchParams.FilterBy switch
         {
             "finished" => query.Match(x => x.AuctionEnd < DateTime.UtcNow),
+            // Left only auctions that will end in the next 6 hours
             "endingSoon" => query.Match(x =>
                 x.AuctionEnd < DateTime.UtcNow.AddHours(6) && x.AuctionEnd > DateTime.UtcNow
             ),
             "all" => query,
+            // By default - Live, show only active auctions
             _ => query.Match(x => x.AuctionEnd > DateTime.UtcNow),
         };
 

@@ -3,21 +3,23 @@
 import { Button, ButtonGroup } from "flowbite-react";
 import { AiOutlineClockCircle, AiOutlineSortAscending } from "react-icons/ai";
 import { BsFillStopCircleFill, BsStopwatchFill } from "react-icons/bs";
-import { GiFinishLine } from "react-icons/gi";
+import { GiFinishLine, GiWeight } from "react-icons/gi"; // Добавила иконку веса
 import { useParamsStore } from "../hooks/useParamsStore";
 
 const pageSizeButtons = [4, 8, 12];
 
 const orderData = [
-  { label: "End date", value: "endingSoon", icon: AiOutlineClockCircle },
+  { label: "Auction End", value: "auctionEnd", icon: AiOutlineClockCircle },
   { label: "Recently added", value: "new", icon: BsFillStopCircleFill },
   { label: "Budget", value: "price", icon: AiOutlineSortAscending },
+  { label: "Weight", value: "weight", icon: GiWeight },
 ];
 
 const filterData = [
   { label: "Live", value: "live", icon: BsStopwatchFill },
   { label: "Ending Soon", value: "endingSoon", icon: GiFinishLine },
   { label: "Finished", value: "finished", icon: BsFillStopCircleFill },
+  { label: "All", value: "all", icon: BsStopwatchFill },
 ];
 
 export default function Filters() {

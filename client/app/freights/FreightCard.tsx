@@ -19,10 +19,7 @@ export default function FreightCard({ freight }: Props) {
         <CargoImage imageUrl={freight.imageUrl} isFinished={isFinished} />
 
         <div className="absolute bottom-2 left-2">
-          <CountdownTimer
-            auctionEnd={freight.auctionEnd}
-            finished={isFinished}
-          />
+          <CountdownTimer auctionEnd={freight.auctionEnd} />
         </div>
         {freight.status === "ReserveNotMet" && (
           <div className="absolute top-2 right-2 bg-amber-600 text-white px-2 py-1 rounded text-[10px] font-bold uppercase">
@@ -44,7 +41,7 @@ export default function FreightCard({ freight }: Props) {
             ${freight.reservePrice?.toLocaleString()}
           </p>
           <p className="text-[10px] text-gray-400 uppercase font-semibold">
-            Budget
+            weight: {freight.weightKg} kg
           </p>
         </div>
       </div>

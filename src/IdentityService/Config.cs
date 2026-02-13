@@ -38,10 +38,11 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                 //RequirePkce = false - we are mot using mobile app
                 RequirePkce = false,
-                RedirectUris = { "http://localhost:3000/api/callback/id-server" },
+                RedirectUris = { "http://localhost:3000/api/auth/callback/id-server" },
                 AllowOfflineAccess = true,
                 AllowedScopes = { "openid", "profile", "freightApp" },
                 AccessTokenLifetime = 3600 * 24 * 30,
+                AlwaysIncludeUserClaimsInIdToken = true,
             },
         ];
 }
