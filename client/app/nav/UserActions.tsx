@@ -9,14 +9,30 @@ import {
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { AiFillTrophy } from "react-icons/ai";
-import { HiCode, HiCog, HiLogout, HiTruck } from "react-icons/hi";
+import { HiCode, HiCog, HiLogout, HiTruck, HiUser } from "react-icons/hi";
+import { useParamsStore } from "../hooks/useParamsStore";
 
 type UserActionsProps = {
   user: User;
 };
 
 export default function UserActions({ user }: UserActionsProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const setParams = useParamsStore((state) => state.setParams);
+
+  function setWinner() {
+    setParams({ winner: user.username, seller: undefined });
+    if (pathname !== "/") router.push("/");
+  }
+
+  function setSeller() {
+    setParams({ seller: user.username, winner: undefined });
+    if (pathname !== "/") router.push("/");
+  }
+
   return (
     <Dropdown label={`Welcome ${user.name}`} inline color="gray">
       <DropdownHeader>
@@ -24,12 +40,16 @@ export default function UserActions({ user }: UserActionsProps) {
         <span className="block truncate text-sm font-medium">{user.name}</span>
       </DropdownHeader>
 
-      <DropdownItem icon={AiFillTrophy}>
-        <Link href="/freights/mytenders">Tenders won</Link>
+      <DropdownItem icon={HiUser} onClick={setSeller}>
+        My Tenders
+      </DropdownItem>
+
+      <DropdownItem icon={AiFillTrophy} onClick={setWinner}>
+        Tenders won
       </DropdownItem>
 
       <DropdownItem icon={HiTruck}>
-        <Link href="/freights/mycargo">Send my cargo</Link>
+        <Link href="/freights/create">Send my cargo</Link>
       </DropdownItem>
 
       {/* This is only visible in development */}

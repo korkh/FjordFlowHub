@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import NavBar from "./nav/NavBar";
 import QueryProvider from "./providers/QueryProvider";
@@ -17,6 +18,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <QueryProvider>
+          <ToastContainer
+            position="bottom-right"
+            hideProgressBar
+            theme="colored"
+          />
           <NavBar />
           <main className="container mx-auto px-5 pt-10">{children}</main>
         </QueryProvider>

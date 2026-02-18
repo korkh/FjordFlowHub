@@ -10,7 +10,7 @@ public class MappingProfiles : Profile
         // match property names in Item
         CreateMap<FreightCreated, Item>();
 
-        // Similarly for updates
+        // Updating dimensions is crucial for SearchService to have accurate data
         CreateMap<FreightUpdated, Item>();
     }
 }

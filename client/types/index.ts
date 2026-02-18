@@ -18,8 +18,18 @@ export type Freight = {
   weightKg: number;
   lengthMeters: number;
   heightMeters: number;
+  widthMeters: number;
+  volumeM3: number;
   pickupCity: string;
   deliveryCity: string;
   imageUrl: string;
   id: string;
+};
+
+export type TenderCounter = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  completed: boolean;
 };

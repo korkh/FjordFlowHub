@@ -56,30 +56,41 @@ namespace FreightService.Controllers
         [HttpPost]
         public async Task<ActionResult<FreightDto>> CreateFreight(CreateFreightDto freightDto)
         {
+            // Check if the user has already posted a similar tender
+            var exists = await _context.Freights.AnyAsync(x =>
+                x.Seller == User.Identity.Name
+                && x.Cargo.Description == freightDto.Description
+                && x.Status == Status.Live
+            );
+
+            if (exists)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "This item is already live. You cannot create a duplicate while it is active.",
+                    }
+                );
+            }
+
             var freight = _mapper.Map<Freight>(freightDto);
-
-            // Set the current user as the seller
             freight.Seller = User.Identity.Name;
-
-            // IMPORTANT FOR TENDER: Start the "bid" at the maximum price
             freight.CurrentLowBid = freightDto.ReservePrice;
 
             _context.Freights.Add(freight);
 
-            //In this point saving to Outbox
-            var newFreight = _mapper.Map<FreightDto>(freight);
-
-            //Publishing to the bus saving to Outbox
-            await _publishEndpoint.Publish(_mapper.Map<FreightCreated>(newFreight));
+            // English: Map to DTO for publishing
+            var newFreightDto = _mapper.Map<FreightDto>(freight);
+            await _publishEndpoint.Publish(_mapper.Map<FreightCreated>(newFreightDto));
 
             var result = await _context.SaveChangesAsync() > 0;
 
             if (!result)
-                return BadRequest("Could not save changes to the DB");
+                return BadRequest(new { message = "Could not save changes to the DB" });
 
             return CreatedAtAction(
                 nameof(GetFreightById),
-                new { freight.Id },
+                new { id = freight.Id },
                 _mapper.Map<FreightDto>(freight)
             );
         }
@@ -100,12 +111,17 @@ namespace FreightService.Controllers
                 return Forbid();
 
             // Manually update cargo properties
-            // Using null-coalescing operator ?? to keep old values if DTO fields are null
-            freight.ReservePrice =
-                updateDto.ReservePrice != 0 ? updateDto.ReservePrice : freight.ReservePrice;
+            freight.ReservePrice = updateDto.ReservePrice ?? freight.ReservePrice;
             freight.Cargo.Description = updateDto.Description ?? freight.Cargo.Description;
-            freight.Cargo.WeightKg =
-                updateDto.WeightKg != 0 ? updateDto.WeightKg : freight.Cargo.WeightKg;
+
+            freight.Cargo.WeightKg = updateDto.WeightKg ?? freight.Cargo.WeightKg;
+
+            freight.Cargo.LengthMeters = updateDto.LengthMeters ?? freight.Cargo.LengthMeters;
+
+            freight.Cargo.WidthMeters = updateDto.WidthMeters ?? freight.Cargo.WidthMeters;
+
+            freight.Cargo.HeightMeters = updateDto.HeightMeters ?? freight.Cargo.HeightMeters;
+
             freight.Cargo.PickupCity = updateDto.PickupCity ?? freight.Cargo.PickupCity;
             freight.Cargo.DeliveryCity = updateDto.DeliveryCity ?? freight.Cargo.DeliveryCity;
 

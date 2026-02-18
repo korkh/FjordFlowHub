@@ -6,19 +6,21 @@ namespace FreightService.Entities
     public class Cargo
     {
         public Guid Id { get; set; }
+        public string Description { get; set; } = null!;
+        public int WeightKg { get; set; }
 
-        // Cargo details
-        public string Description { get; set; } = null!; // Description of the cargo
-        public int WeightKg { get; set; } // Weight in kilograms
+        // Dimensions
         public double LengthMeters { get; set; }
+        public double WidthMeters { get; set; }
         public double HeightMeters { get; set; }
 
-        // Location of pickup and delivery
-        public string PickupCity { get; set; } = null!; //For example: "Oslo"
-        public string DeliveryCity { get; set; } = null!; // For example: "Bergen"
+        // Calculated Volume
+        public double VolumeM3 => Math.Round(LengthMeters * WidthMeters * HeightMeters, 2);
+
+        public string PickupCity { get; set; } = null!;
+        public string DeliveryCity { get; set; } = null!;
         public required string ImageUrl { get; set; }
 
-        //Navigation property for related Freight
         public Freight Freight { get; set; } = null!;
         public Guid FreightId { get; set; }
     }

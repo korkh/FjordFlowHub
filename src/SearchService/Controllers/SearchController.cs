@@ -15,7 +15,7 @@ public class SearchController : ControllerBase
         // 1. Initialize paged search
         var query = DB.PagedSearch<Item, Item>();
 
-        // 2. Full-text search (requires text index in MongoDB)
+        // 2. Full-text search (requires text index on Description and other fields in MongoDB)
         if (!string.IsNullOrEmpty(searchParams.SearchTerm))
         {
             query.Match(Search.Full, searchParams.SearchTerm).SortByTextScore();
@@ -30,6 +30,8 @@ public class SearchController : ControllerBase
                 .Sort(x => x.Ascending(a => a.AuctionEnd)),
             "description" => query.Sort(x => x.Ascending(a => a.Description)),
             "weight" => query.Sort(x => x.Descending(a => a.WeightKg)),
+            // English: Added sorting by volume to help carriers select appropriate vehicles
+            "volume" => query.Sort(x => x.Descending(a => a.VolumeM3)),
             // By default, sort by auction end time (soonest first)
             _ => query.Sort(x => x.Ascending(a => a.AuctionEnd)),
         };
@@ -38,16 +40,22 @@ public class SearchController : ControllerBase
         query = searchParams.FilterBy switch
         {
             "finished" => query.Match(x => x.AuctionEnd < DateTime.UtcNow),
-            // Left only auctions that will end in the next 6 hours
+
             "endingSoon" => query.Match(x =>
                 x.AuctionEnd < DateTime.UtcNow.AddHours(6) && x.AuctionEnd > DateTime.UtcNow
             ),
+
+            // 'live' and default now do the same - show only active auctions
+            "live" => query.Match(x => x.AuctionEnd > DateTime.UtcNow),
+
+            // 'all' should not apply any date filter at all
             "all" => query,
-            // By default - Live, show only active auctions
+
+            // By default - show only active (Live) auctions
             _ => query.Match(x => x.AuctionEnd > DateTime.UtcNow),
         };
 
-        // 5. Seller/Winner filtering (Fix: added assignments to query variable)
+        // 5. Seller/Winner filtering
         if (!string.IsNullOrEmpty(searchParams.Seller))
         {
             query = query.Match(x => x.Seller == searchParams.Seller);

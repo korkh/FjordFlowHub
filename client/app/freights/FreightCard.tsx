@@ -1,5 +1,6 @@
 import { Freight } from "@/types";
 import Link from "next/link";
+import StatusBadge from "../components/StatusBadge";
 import CargoImage from "./CargoImage";
 import CountdownTimer from "./CountdownTimer";
 
@@ -21,11 +22,7 @@ export default function FreightCard({ freight }: Props) {
         <div className="absolute bottom-2 left-2">
           <CountdownTimer auctionEnd={freight.auctionEnd} />
         </div>
-        {freight.status === "ReserveNotMet" && (
-          <div className="absolute top-2 right-2 bg-amber-600 text-white px-2 py-1 rounded text-[10px] font-bold uppercase">
-            Reserve Not Met
-          </div>
-        )}
+        <StatusBadge status={freight.status} fixed />
       </div>
 
       <div className="flex justify-between items-start mt-4">

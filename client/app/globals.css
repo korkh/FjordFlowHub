@@ -2,6 +2,11 @@
 @import "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
 
+
 button, [role="button"] {
     cursor: pointer;
+}
+
+.react-datepicker-wrapper {
+    width: 100%;
 }
