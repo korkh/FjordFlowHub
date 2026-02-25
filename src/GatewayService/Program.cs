@@ -14,11 +14,27 @@ builder
         options.TokenValidationParameters.NameClaimType = "username";
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "customPolicy",
+        policyBuilder =>
+        {
+            policyBuilder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithOrigins(builder.Configuration["ClientApp"]);
+        }
+    );
+});
+
 var app = builder.Build();
+
+app.UseCors("customPolicy");
+app.MapReverseProxy();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapReverseProxy();
 
 app.Run();
