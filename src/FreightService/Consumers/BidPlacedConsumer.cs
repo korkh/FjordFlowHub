@@ -4,7 +4,6 @@ using MassTransit;
 
 namespace FreightService.Consumers;
 
-// Переименовали в Consumer, чтобы не путать с контрактом
 public class BidPlacedConsumer(FreightDbContext dbContext) : IConsumer<BidPlaced>
 {
     private readonly FreightDbContext _dbContext = dbContext;
@@ -13,7 +12,7 @@ public class BidPlacedConsumer(FreightDbContext dbContext) : IConsumer<BidPlaced
     {
         Console.WriteLine("--> Consuming bid placed");
 
-        var freight = await _dbContext.Freights.FindAsync(context.Message.FreightId);
+        var freight = await _dbContext.Freights.FindAsync(Guid.Parse(context.Message.FreightId));
 
         // Update the current low bid
         if (

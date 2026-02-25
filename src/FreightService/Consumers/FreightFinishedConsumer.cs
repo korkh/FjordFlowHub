@@ -13,8 +13,9 @@ namespace FreightService.Consumers
         {
             Console.WriteLine("--> Consuming freight finished");
 
-            var freight = await _dbContext.Freights.FindAsync(context.Message.FreightId);
-
+            var freight = await _dbContext.Freights.FindAsync(
+                Guid.Parse(context.Message.FreightId)
+            );
             //if freight sold
             if (context.Message.FreightSold)
             {

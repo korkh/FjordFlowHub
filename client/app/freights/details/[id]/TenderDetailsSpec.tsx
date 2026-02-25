@@ -22,7 +22,7 @@ export default function TenderDetailsSpec({ data }: Props) {
       <div className="relative aspect-video rounded-3xl overflow-hidden shadow-xl border border-gray-100 bg-white">
         <Image
           src={data.imageUrl || "/images/placeholder.png"}
-          alt={data.description}
+          alt={data.description || "image of a freight"}
           fill
           className="object-cover hover:scale-105 transition-transform duration-500 ease-in-out"
           priority

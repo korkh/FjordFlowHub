@@ -2,11 +2,11 @@ namespace Contracts
 {
     public class BidPlaced
     {
-        public required string Id { get; init; } // ID of the bid record
-        public required string FreightId { get; init; } // ID of the freight being bid on
-        public required string Bidder { get; init; } // Username of the person who placed the bid
+        public string Id { get; init; }
+        public string FreightId { get; init; }
+        public string Bidder { get; init; }
         public DateTime BidTime { get; init; }
         public int Amount { get; init; }
-        public required string BidStatus { get; init; } // e.g., "Accepted", "TooLow", "Finished"}
+        public required string BidStatus { get; init; }
     }
 }

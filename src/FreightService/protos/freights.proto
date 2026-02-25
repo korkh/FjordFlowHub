@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+// Updated namespace to follow standard conventions
+option csharp_namespace = "FreightService.Protos";
+
+// Service definition for internal gRPC communication
+service GrpcFreight {
+    // Fetches essential freight data for bidding validation
+    rpc GetFreight (GetFreightRequest) returns (GrpcFreightResponse);
+}
+
+// Request message
+message GetFreightRequest {
+    string id = 1;
+}
+
+// Separate model to represent the Freight entity
+message GrpcFreightModel {
+    string id = 1;
+    string seller = 2;
+    string auction_end = 3; 
+    int32 reserve_price = 4;
+}
+
+// Wrap the model in a response message
+message GrpcFreightResponse {
+    GrpcFreightModel freight = 1;
+}

@@ -1,6 +1,7 @@
 using FreightService.Consumers;
 using FreightService.Data;
 using FreightService.RequestHelpers;
+using FreightService.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -55,8 +56,7 @@ builder
         options.TokenValidationParameters.NameClaimType = "username";
     });
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddGrpc();
 
 var app = builder.Build();
 
@@ -65,6 +65,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<GrpcFreightService>();
 
 // Seeding Data properly
 using (var scope = app.Services.CreateScope())
