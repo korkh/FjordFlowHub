@@ -18,7 +18,7 @@ export default async function Details({ params }: { params: { id: string } }) {
       <BidListHeader data={data} user={user} />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <TenderDetailsSpec data={data} />
-        <BidList data={data} />
+        <BidList freight={data} user={user} />
       </div>
     </>
   );

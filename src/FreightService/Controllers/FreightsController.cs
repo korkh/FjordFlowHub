@@ -74,8 +74,8 @@ namespace FreightService.Controllers
             }
 
             var freight = _mapper.Map<Freight>(freightDto);
-            freight.Seller = User.Identity.Name;
-            freight.CurrentLowBid = freightDto.ReservePrice;
+            freight.Seller =
+                User.Identity?.Name ?? throw new InvalidOperationException("User not found");
 
             _context.Freights.Add(freight);
 

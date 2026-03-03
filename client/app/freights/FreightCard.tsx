@@ -3,12 +3,14 @@ import Link from "next/link";
 import StatusBadge from "../components/StatusBadge";
 import CargoImage from "./CargoImage";
 import CountdownTimer from "./CountdownTimer";
+import CurrentBid from "./CurrentBid";
 
 type Props = {
   freight: Freight;
 };
 
 export default function FreightCard({ freight }: Props) {
+  console.log("Current low bid: ", freight);
   const isFinished =
     freight.status === "Finished" ||
     freight.status === "ReserveNotMet" ||
@@ -21,6 +23,13 @@ export default function FreightCard({ freight }: Props) {
 
         <div className="absolute bottom-2 left-2">
           <CountdownTimer auctionEnd={freight.auctionEnd} />
+        </div>
+        <div className="absolute bottom-2 right-2">
+          <CurrentBid
+            reservePrice={freight.reservePrice}
+            amount={freight.currentLowBid}
+            closed={isFinished}
+          />
         </div>
         <StatusBadge status={freight.status} fixed />
       </div>

@@ -2,7 +2,10 @@
 
 import { TenderCounter } from "@/types";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import Countdown, { zeroPad } from "react-countdown";
+import { toast } from "react-toastify";
+import { useBidStore } from "../hooks/useBidStore";
 
 const renderer = ({
   days,
@@ -48,10 +51,19 @@ const CountdownTimer = ({
   textSize,
 }: Props & { textSize?: string }) => {
   const endDate = new Date(auctionEnd);
+  const setOpen = useBidStore((state) => state.setOpen);
+  const pathName = usePathname();
+  function tenderClosed() {
+    if (pathName.startsWith("/freights/details")) {
+      setOpen(false);
+      toast.info("This tender has just closed!");
+    }
+  }
   return (
     <Countdown
       date={endDate}
       renderer={(props) => renderer({ ...props, textSize })}
+      onComplete={tenderClosed}
     />
   );
 };

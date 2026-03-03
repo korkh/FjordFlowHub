@@ -14,7 +14,7 @@ export default function CargoImage({ imageUrl, isFinished }: Props) {
         alt="image of a freight"
         src={imageUrl}
         fill
-        className={`object-cover duration-700 ease-in-out ${
+        className={`object-cover duration-800 ease-in-out ${
           isLoading
             ? "scale-110 blur-xl grayscale"
             : "scale-100 blur-0 grayscale-0"

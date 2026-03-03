@@ -1,16 +1,19 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import queryString from "query-string";
+import { useEffect, useState } from "react"; // Добавляем useEffect
 import { useShallow } from "zustand/shallow";
 import { getData } from "../actions/auctionActions";
 import AppPagination from "../components/AppPagination";
 import EmptyFilter from "../components/EmptyFilter";
 import { useParamsStore } from "../hooks/useParamsStore";
+import { useTenderStore } from "../hooks/useTenderStore"; // Импорт твоего нового стора
 import Filters from "./Filters";
 import FreightCard from "./FreightCard";
 
 export default function Listings() {
+  const [loading, setLoading] = useState(true);
+  // 1. Filter params
   const params = useParamsStore(
     useShallow((state) => ({
       pageNumber: state.pageNumber,
@@ -23,11 +26,18 @@ export default function Listings() {
     })),
   );
 
+  // 2. Get data from Zustand
+  const { freights, totalCount, pageCount, setData } = useTenderStore(
+    useShallow((state) => ({
+      freights: state.freights,
+      totalCount: state.totalCount,
+      pageCount: state.pageCount,
+      setData: state.setData,
+    })),
+  );
+
   const url = queryString.stringifyUrl(
-    {
-      url: "",
-      query: params,
-    },
+    { url: "", query: params },
     { skipEmptyString: true, skipNull: true },
   );
 
@@ -36,36 +46,36 @@ export default function Listings() {
     setParams({ pageNumber });
   }
 
-  const { data, isLoading, isFetching, isError } = useQuery({
-    queryKey: ["freights", url], // every time url changes, the query will refetch
-    queryFn: () => getData(url),
-    placeholderData: (previousData) => previousData,
-  });
+  // 4. Sinchronize Zustand with React Query
+  useEffect(() => {
+    getData(url).then((data) => {
+      setData(data);
+      setLoading(false);
+    });
+  }, [url, setData]);
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error loading freights. Please try again later.</h3>;
+  if (loading) return <h3>Loading...</h3>;
 
   return (
     <>
       <Filters />
-      {data && data.totalCount === 0 ? (
+      {totalCount === 0 ? (
         <div className="flex items-center justify-center h-40">
           <EmptyFilter showReset />
         </div>
       ) : (
         <div className="grid grid-cols-4 gap-6">
-          {data &&
-            data.results.map((freight) => (
-              <FreightCard key={freight.id} freight={freight} />
-            ))}
+          {freights.map((freight) => (
+            <FreightCard key={freight.id} freight={freight} />
+          ))}
         </div>
       )}
-      {data && data.pageCount > 0 && (
+      {pageCount > 0 && (
         <div className="flex justify-center mt-4 ">
           <AppPagination
             pageChange={setPageNumber}
             currentPage={params.pageNumber}
-            pageCount={data.pageCount}
+            pageCount={pageCount}
           />
         </div>
       )}

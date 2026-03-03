@@ -6,8 +6,8 @@ namespace FreightService.DTOs
         public int ReservePrice { get; set; }
         public required string Seller { get; set; }
         public string Winner { get; set; }
-        public int SoldAmount { get; set; }
-        public int CurrentLowBid { get; set; }
+        public int? SoldAmount { get; set; }
+        public int? CurrentLowBid { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime AuctionEnd { get; set; }

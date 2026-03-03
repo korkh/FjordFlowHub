@@ -28,7 +28,6 @@ namespace FreightService.Data
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 2500,
-                    CurrentLowBid = 2500,
                     Seller = "Oslo Construction AS",
                     AuctionEnd = DateTime.UtcNow.AddDays(10),
                     Status = Status.Live,
@@ -45,12 +44,11 @@ namespace FreightService.Data
                             "https://media.sciencephoto.com/image/c0264488/800wm/C0264488-Thermal_insulation_boards.jpg",
                     },
                 },
-                // 2. Server rack equipment (IT)
+                // 2. Finished server rack equipment (Electronics)
                 new Freight
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 800,
-                    CurrentLowBid = 750,
                     Seller = "Nordic Tech Electronics",
                     AuctionEnd = DateTime.UtcNow.AddHours(-10),
                     Status = Status.Finished,
@@ -67,12 +65,11 @@ namespace FreightService.Data
                             "https://robots.net/wp-content/uploads/2023/11/how-to-cool-a-server-rack-1701058282.jpg",
                     },
                 },
-                // 3. Handmade oak tables (Furniture)
+                // 3. Finished reserve not met
                 new Freight
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 1500,
-                    CurrentLowBid = 1400,
                     Seller = "Fjord Furniture",
                     AuctionEnd = DateTime.UtcNow.AddHours(-8),
                     Status = Status.ReserveNotMet,
@@ -94,7 +91,6 @@ namespace FreightService.Data
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 5000,
-                    CurrentLowBid = 5000,
                     Seller = "Tromsø Seafood Export",
                     AuctionEnd = DateTime.UtcNow.AddDays(33),
                     Status = Status.Live,
@@ -116,7 +112,6 @@ namespace FreightService.Data
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 12000,
-                    CurrentLowBid = 11500,
                     Seller = "Norway Energy Solutions",
                     AuctionEnd = DateTime.UtcNow.AddDays(15),
                     Status = Status.Live,
@@ -138,10 +133,9 @@ namespace FreightService.Data
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 500,
-                    CurrentLowBid = 450,
                     Seller = "Oslo Auto Parts",
-                    AuctionEnd = DateTime.UtcNow.AddHours(-12),
-                    Status = Status.ReserveNotMet,
+                    AuctionEnd = DateTime.UtcNow.AddHours(20),
+                    Status = Status.Live,
                     Cargo = new Cargo
                     {
                         Description = "Winter tires set (Peugeot 3008 compatible)",
@@ -155,14 +149,13 @@ namespace FreightService.Data
                             "https://tse1.mm.bing.net/th/id/OIP.NYDR-ovXtETkucCBRsH61wHaFj?cb=defcachec2&w=1500&h=1125&rs=1&pid=ImgDetMain&o=7&rm=3",
                     },
                 },
-                // 7. Archived documents (Palletized)
+                // 7. Archived documents (Palletized) live
                 new Freight
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 200,
-                    CurrentLowBid = 200,
                     Seller = "National Library",
-                    AuctionEnd = DateTime.UtcNow.AddHours(23),
+                    AuctionEnd = DateTime.UtcNow.AddDays(15),
                     Status = Status.Live,
                     Cargo = new Cargo
                     {
@@ -177,15 +170,14 @@ namespace FreightService.Data
                             "https://tse4.mm.bing.net/th/id/OIP.Ha3gZPJzVUlm1haTuP4a9QHaFk?cb=defcachec2&w=2000&h=1506&rs=1&pid=ImgDetMain&o=7&rm=3",
                     },
                 },
-                // 8. Solar panels
+                // 8. Solar panels live
                 new Freight
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 3000,
-                    CurrentLowBid = 2800,
                     Seller = "SolarNordic AS",
-                    AuctionEnd = DateTime.UtcNow.AddHours(-23),
-                    Status = Status.Finished,
+                    AuctionEnd = DateTime.UtcNow.AddHours(45),
+                    Status = Status.Live,
                     Cargo = new Cargo
                     {
                         Description = "Photovoltaic solar panels",
@@ -204,7 +196,6 @@ namespace FreightService.Data
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 500,
-                    CurrentLowBid = 500,
                     Seller = "Oslo Coffee Roasters",
                     AuctionEnd = DateTime.UtcNow.AddDays(15),
                     Status = Status.Live,
@@ -226,7 +217,6 @@ namespace FreightService.Data
                 {
                     Id = Guid.NewGuid(),
                     ReservePrice = 15000,
-                    CurrentLowBid = 15000,
                     Seller = "Fjord Industrial",
                     AuctionEnd = DateTime.UtcNow.AddDays(40),
                     Status = Status.Live,

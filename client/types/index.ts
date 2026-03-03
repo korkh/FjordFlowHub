@@ -5,7 +5,7 @@ export type PagedResult<T> = {
 };
 
 export type Freight = {
-  reservePrice?: number;
+  reservePrice: number;
   seller: string;
   winner?: string;
   soldAmount?: number;
@@ -32,4 +32,21 @@ export type TenderCounter = {
   minutes: number;
   seconds: number;
   completed: boolean;
+};
+
+export type Bid = {
+  id: string;
+  freightId: string;
+  bidder: string;
+  bidTime: string;
+  amount: number;
+  bidStatus: string;
+};
+
+export type FreightFinished = {
+  freightId: string;
+  freightSold: boolean;
+  seller: string;
+  winner?: string;
+  amount?: number;
 };

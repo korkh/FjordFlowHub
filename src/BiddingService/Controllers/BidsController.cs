@@ -25,7 +25,7 @@ namespace BiddingService.Controllers
         [Authorize]
         [HttpPost]
         // Logic snippet for BidsController
-        public async Task<ActionResult<Bid>> PlaceBid(string freightId, int amount)
+        public async Task<ActionResult<BidDto>> PlaceBid(string freightId, int amount)
         {
             // 1. Get the freight/auction info from the local MongoDB (BiddingService)
             var tender = await DB.Find<Freight>().OneAsync(freightId);

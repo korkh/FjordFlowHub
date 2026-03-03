@@ -11,22 +11,27 @@ type Props = {
 
 export default function BidListHeader({ data, user }: Props) {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between items-start mb-4">
       <Heading title={data.description} />
-      <div className="flex items-center gap-2">
-        {user?.username === data.seller && (
-          <>
-            <EditButton id={data.id} />
-            <DeleteButton id={data.id} />
-          </>
-        )}
-      </div>
 
-      <div className="flex items-center bg-gray-50 p-2 mb-2 rounded-xl border border-gray-100 shadow-sm">
-        <span className="text-[15px] font-black text-gray-400 uppercase tracking-widest px-4">
-          Time Remaining:
-        </span>
-        <CountdownTimer auctionEnd={data.auctionEnd} textSize="xs" />
+      <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center bg-gray-50 p-2 rounded-xl border border-gray-100 shadow-sm">
+            <span className="text-[12px] font-black text-gray-400 uppercase tracking-widest px-4">
+              Time Remaining:
+            </span>
+            <CountdownTimer auctionEnd={data.auctionEnd} textSize="xs" />
+          </div>
+
+          <div className="flex justify-end gap-2">
+            {user?.username === data.seller && (
+              <>
+                <EditButton id={data.id} />
+                <DeleteButton id={data.id} />
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
