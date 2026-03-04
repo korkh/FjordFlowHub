@@ -10,7 +10,6 @@ type Props = {
 };
 
 export default function FreightCard({ freight }: Props) {
-  console.log("Current low bid: ", freight);
   const isFinished =
     freight.status === "Finished" ||
     freight.status === "ReserveNotMet" ||

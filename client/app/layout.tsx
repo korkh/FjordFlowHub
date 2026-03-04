@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 import { ToastContainer } from "react-toastify";
-import { getCurrentUser } from "./actions/authActions";
 import "./globals.css";
 import NavBar from "./nav/NavBar";
 import SignalRProvider from "./providers/SignalRProvider";
@@ -15,19 +15,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getCurrentUser();
   return (
     <html lang="en">
       <body>
-        <ToastContainer
-          position="bottom-right"
-          hideProgressBar
-          theme="colored"
-        />
-        <NavBar />
-        <main className="container mx-auto px-5 pt-10">
-          <SignalRProvider user={user}>{children}</SignalRProvider>
-        </main>
+        <SessionProvider>
+          <ToastContainer
+            position="bottom-right"
+            hideProgressBar
+            theme="colored"
+          />
+          <NavBar />
+          <main className="container mx-auto px-5 pt-10">
+            <SignalRProvider>{children}</SignalRProvider>
+          </main>
+        </SessionProvider>
       </body>
     </html>
   );

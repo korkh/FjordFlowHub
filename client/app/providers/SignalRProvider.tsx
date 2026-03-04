@@ -2,7 +2,7 @@
 
 import { Bid, Freight, FreightFinished } from "@/types";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { ReactNode, useCallback, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
@@ -14,9 +14,10 @@ import { useTenderStore } from "../hooks/useTenderStore";
 
 type Props = {
   children: ReactNode;
-  user: User | null;
 };
-export default function SignalRProvider({ children, user }: Props) {
+export default function SignalRProvider({ children }: Props) {
+  const { status, data: session } = useSession();
+  const user = session?.user;
   //Store SignalR connection
   const connectionHub = useRef<HubConnection | null>(null);
   const setCurrentLowBid = useTenderStore((state) => state.setCurrentLowBid);
@@ -25,6 +26,7 @@ export default function SignalRProvider({ children, user }: Props) {
 
   const handleTenderCreated = useCallback(
     (freight: Freight) => {
+      if (status === "loading") return;
       if (user?.username !== freight.seller) {
         return toast(<TenderCreatedToast freight={freight} />, {
           autoClose: 10000,
@@ -79,7 +81,7 @@ export default function SignalRProvider({ children, user }: Props) {
   useEffect(() => {
     if (!connectionHub.current) {
       connectionHub.current = new HubConnectionBuilder()
-        .withUrl("http://localhost:6001/notifications")
+        .withUrl(process.env.NEXT_PUBLIC_NOTIFY_URL!)
         .withAutomaticReconnect()
         .build();
 
@@ -102,6 +104,11 @@ export default function SignalRProvider({ children, user }: Props) {
       connectionHub.current?.off("FreightCreated", handleTenderCreated);
       connectionHub.current?.off("FreightFinished", handleTenderClosed);
     };
-  }, [setCurrentLowBid, handleBidPlaced, handleTenderCreated]);
+  }, [
+    setCurrentLowBid,
+    handleBidPlaced,
+    handleTenderCreated,
+    handleTenderClosed,
+  ]);
   return children;
 }

@@ -18,7 +18,7 @@ public static class Config
             new ApiScope("freightApp", "Freight App full access"),
         ];
 
-    public static IEnumerable<Client> Clients =>
+    public static IEnumerable<Client> Clients(IConfiguration config) =>
         [
             new Client
             {
@@ -38,7 +38,7 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                 //RequirePkce = false - we are mot using mobile app
                 RequirePkce = false,
-                RedirectUris = { "http://localhost:3000/api/auth/callback/id-server" },
+                RedirectUris = { config["ClientAppUri"] + "/api/auth/callback/id-server" },
                 AllowOfflineAccess = true,
                 AllowedScopes = { "openid", "profile", "freightApp" },
                 AccessTokenLifetime = 3600 * 24 * 30,

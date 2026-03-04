@@ -1,9 +1,9 @@
 import { auth } from "@/auth";
 
-const baseUrl = "http://localhost:6001/";
+const baseUrl = process.env.API_URL;
 
 function getFullUrl(url: string): string {
-  const cleanBaseUrl = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+  const cleanBaseUrl = baseUrl!.endsWith("/") ? baseUrl : `${baseUrl}/`;
   const cleanUrl = url.startsWith("/") ? url.substring(1) : url;
   return `${cleanBaseUrl}${cleanUrl}`;
 }

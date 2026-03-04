@@ -9,12 +9,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       id: "id-server",
       clientId: "nextApp",
       clientSecret: "secret",
-      issuer: "http://localhost:5001",
-      authorization: { params: { scope: "openid profile freightApp" } },
+      issuer: process.env.IDENTITY_URL,
+      authorization: {
+        params: { scope: "openid profile freightApp" },
+        //url: "http://localhost:5000/connect/authorize" Identity server,
+        url: process.env.IDENTITY_URL + "/connect/authorize",
+      },
+      token: {
+        url: `${process.env.IDENTITY_URL_INTERNAL}/connect/token`,
+      },
+      userinfo: {
+        url: `${process.env.IDENTITY_URL_INTERNAL}/connect/userinfo`,
+      },
       idToken: true,
     } as OIDCConfig<Profile>),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
     async authorized({ auth }) {
       return !!auth; // Only allow access to authenticated users
     },
